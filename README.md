@@ -1,4 +1,6 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Description
+
+Collectify app is an innovative platform designed for card collectors, allowing them to efficiently manage and organize their collections. By using image recognition technology, the app can automatically identify collectible cards through photos taken by the user and mark the cards they already own. Additionally, it enables users to create, share, and explore card sets within the community, fostering interaction and the exchange of knowledge among collectors.
 
 ## Getting Started
 
