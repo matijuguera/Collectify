@@ -2,6 +2,15 @@
 
 Collectify app is an innovative platform designed for card collectors, allowing them to efficiently manage and organize their collections. By using image recognition technology, the app can automatically identify collectible cards through photos taken by the user and mark the cards they already own. Additionally, it enables users to create, share, and explore card sets within the community, fostering interaction and the exchange of knowledge among collectors.
 
+## Pre
+
+Installing vercel
+
+- `pnpm setup`
+- Restart terminal
+- `pnpm i -g vercel`
+- Check version: `vercel --version`
+
 ## Getting Started
 
 First, run the development server:
