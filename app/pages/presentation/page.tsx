@@ -1,8 +1,16 @@
+"use client";
+
 import { Button } from "@/app/components/ui/button";
 import Logo from "@/app/components/ui/logo";
-import React from "react";
+import { useRouter } from "next/navigation";
 
-export default function page() {
+export default function Page() {
+  const router = useRouter();
+
+  function onGoClick() {
+    router.push("/pages/login");
+  }
+
   return (
     <div id="main-container" className="h-full flex flex-col overflow-hidden">
       <div
@@ -12,7 +20,9 @@ export default function page() {
         <Logo />
       </div>
       <div id="footer-container">
-        <Button className="w-full">Go!</Button>
+        <Button className="w-full" onClick={onGoClick}>
+          Go!
+        </Button>
       </div>
     </div>
   );

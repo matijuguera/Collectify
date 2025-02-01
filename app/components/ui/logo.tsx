@@ -57,7 +57,7 @@ const Logo: React.FC<LogoProps> = ({
     );
   }
 
-  const convertedSize = calculateSize(788, 268, size);
+  const convertedSize = calculateSize(98, 255, size);
 
   return (
     <svg
