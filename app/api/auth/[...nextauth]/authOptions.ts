@@ -37,6 +37,11 @@ export const authOptions: AuthOptions = {
           throw new Error("Invalid credentials");
         }
 
+        // We store null for google sign in users
+        if (!user.hashedPassword) {
+          throw new Error("Invalid credentials");
+        }
+
         const passwordMatch = await bcrypt.compare(
           password,
           user.hashedPassword || ""
@@ -58,18 +63,44 @@ export const authOptions: AuthOptions = {
     }),
   ],
 
-  // ------ CALLBACKS, PAGINAS, ETC. ------
   callbacks: {
-    // Este callback se llama al crear un JWT (cuando inicia sesión un usuario)
+    async signIn({ account, profile }) {
+      if (account?.provider === "google") {
+        const email = profile?.email;
+
+        if (!email) {
+          throw new Error("No email returned from Google");
+        }
+
+        let existingUser = await prisma.user.findUnique({
+          where: { email },
+        });
+
+        if (!existingUser) {
+          // TODO: add Provider to user
+
+          existingUser = await prisma.user.create({
+            data: {
+              email,
+              name: profile?.name || "",
+              emailVerified: new Date(),
+              hashedPassword: null,
+            },
+          });
+        }
+
+        return true;
+      }
+
+      return true;
+    },
     async jwt({ token, user }) {
-      // Cuando user existe, es la primera vez que se crea el token
       if (user) {
         token.id = user.id;
         token.email = user.email;
       }
       return token;
     },
-    // Este callback se llama cada vez que entras a una página y NextAuth revisa la sesión
     async session({ session, token }) {
       if (token && session && session.user) {
         // @ts-expect-error ignore id error

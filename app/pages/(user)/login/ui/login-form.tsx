@@ -45,6 +45,12 @@ export default function LoginForm() {
     router.push("/pages/forgot-password");
   }
 
+  const onLoginWithGoogleClick = async () => {
+    await signIn("google", {
+      callbackUrl: "/pages/home",
+    });
+  };
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       const response = await signIn("credentials", {
@@ -119,6 +125,7 @@ export default function LoginForm() {
           variant="outline"
           className="w-full text-primary-500"
           type="button"
+          onClick={onLoginWithGoogleClick}
         >
           Login with Google{" "}
           <Image src="/google-icon.png" alt="Google" width={20} height={20} />
