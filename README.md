@@ -4,12 +4,34 @@ Collectify app is an innovative platform designed for card collectors, allowing 
 
 ## Pre
 
+Installing Git
+
+- `https://git-scm.com/downloads`
+- Press next at everything
+
+Installing postman
+
+- `https://www.postman.com/downloads/`
+- For testing the API
+
+Installing Node
+
+- v22.13.1
+- `https://nodejs.org/es/download`
+- TODO: add nvm file
+
 Installing vercel
 
 - `pnpm setup`
 - Restart terminal
 - `pnpm i -g vercel`
 - Check version: `vercel --version`
+
+# Architecture
+
+/App -> root project
+/App/Api -> Backend
+/App/components -> Todos los componentes reutilizables
 
 ## Getting Started
 

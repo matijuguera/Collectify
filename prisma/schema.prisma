@@ -41,3 +41,9 @@ enum VerificationTokenType {
   VERIFY_EMAIL
   RESET_PASSWORD
 }
+
+model Theme {
+  id    String @id @default(uuid())
+  name  String
+  photo Bytes
+}
