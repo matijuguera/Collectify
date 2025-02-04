@@ -1,0 +1,12 @@
+version: '3.9'
+services:
+  db:
+    image: postgres:15
+    container_name: collectify_test_db
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypass
+      POSTGRES_DB: my_test_db
+    ports:
+      - "5432:5432"
+      
