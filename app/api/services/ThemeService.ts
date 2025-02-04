@@ -13,4 +13,12 @@ export default class ThemeService {
 
     return this.themeRepository.create(name, photo);
   }
+
+  async list() {
+    return this.themeRepository.list();
+  }
+   
+  async get(id: string) {
+    return this.themeRepository.get(id);
+  }
 }
