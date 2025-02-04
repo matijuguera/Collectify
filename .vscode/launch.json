@@ -1,21 +1,3 @@
-// {
-//     "name": "Jest my-package CURRENT FILE",
-//     "type": "node",
-//     "request": "launch",
-//     "runtimeArgs": [
-//       "--inspect-brk",
-//       "${workspaceRoot}/node_modules/jest/bin/jest.js",
-//       "--config",
-//       "${workspaceRoot}/packages/my-package/jest.config.js",
-//       "--runInBand",
-//       "${file}"
-//     ],
-//     "cwd": "${workspaceFolder}/packages/my-package",
-//     "console": "integratedTerminal",
-//     "configurations": [
-    
-//     ]
-//   }
 {
   "version": "0.2.0",
   "configurations": [
