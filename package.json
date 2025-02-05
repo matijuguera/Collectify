@@ -11,6 +11,9 @@
     "test:watch": "jest --watch",
     "reset-test-db": "env-cmd -f .env.test prisma migrate reset --force && env-cmd -f .env.test prisma migrate deploy"
   },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  },
   "dependencies": {
     "@auth0/nextjs-auth0": "^3.5.0",
     "@hookform/resolvers": "^3.10.0",
@@ -43,7 +46,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
     "@types/jest": "^29.5.14",
-    "@types/node": "^20",
+    "@types/node": "^20.17.17",
     "@types/nodemailer": "^6.4.17",
     "@types/react": "^19",
     "@types/react-dom": "^19",
