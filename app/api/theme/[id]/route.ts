@@ -24,8 +24,8 @@ export async function PUT(
   const name = formData.get("name") as string;
   const photo = formData.get("photo") as File;
 
-  if (!name || !photo) {
-    return NextResponse.json({ error: "ERROR" }, { status: 400 });
+  if (!name && !photo) {
+    return NextResponse.json({ error: "ERROR" }, { status: 404 });
   }
 
   const arrayBuffer = await photo.arrayBuffer();
@@ -39,7 +39,7 @@ export async function PUT(
   } catch (error) {
     return NextResponse.json(
       { error: (error as Error).message },
-      { status: 400 }
+      { status: 404 }
     );
   }
 }
@@ -63,7 +63,7 @@ export async function DELETE(
     console.error("Error",error);
     return NextResponse.json(
       { error: (error as Error).message },
-      { status: 400 }
+      { status: 404 }
     );
   }
 } 
