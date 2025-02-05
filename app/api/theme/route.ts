@@ -22,3 +22,11 @@ export async function POST(request: Request) {
     );
   }
 }
+
+export async function GET() {
+  const themeService = new ThemeService(new PrismaThemeRepository());
+  const themes = await themeService.list();
+  return NextResponse.json(themes);
+}
+
+
