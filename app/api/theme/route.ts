@@ -28,3 +28,5 @@ export async function GET() {
   const themes = await themeService.list();
   return NextResponse.json(themes);
 }
+
+

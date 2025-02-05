@@ -14,3 +14,47 @@ export async function GET(
   }
   return NextResponse.json(theme);
 }
+///TEST
+export async function PUT(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params;
+  const formData = await request.formData();
+  const name = formData.get("name") as string;
+  const photo = formData.get("photo") as File;
+
+  const arrayBuffer = await photo.arrayBuffer();
+  const uint8ArrayPhoto = new Uint8Array(arrayBuffer);
+
+  const themeService = new ThemeService(new PrismaThemeRepository());
+
+  try {
+    const theme = await themeService.update(id, name, uint8ArrayPhoto);
+    return NextResponse.json(theme);
+  } catch (error) {
+    return NextResponse.json(
+      { error: (error as Error).message },
+      { status: 400 }
+    );
+  }
+}
+/// END TEST
+
+export async function DELETE(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params;
+  const themeService = new ThemeService(new PrismaThemeRepository());
+
+  try {
+    const theme = await themeService.delete(id);
+    return NextResponse.json(theme);
+  } catch (error) {
+    return NextResponse.json(
+      { error: (error as Error).message },
+      { status: 400 }
+    );
+  }
+}
