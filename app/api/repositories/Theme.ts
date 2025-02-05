@@ -7,6 +7,7 @@ export interface IThemeRepository {
   get(id: string): Promise<Theme|null>;
   update(id: string, name: string, photo: Uint8Array<ArrayBufferLike>): Promise<Theme>;
   delete(id: string): Promise<Theme>;
+  findById(id: string): Promise<Theme | null>;
 }
 
 export class PrismaThemeRepository implements IThemeRepository {
@@ -36,5 +37,8 @@ export class PrismaThemeRepository implements IThemeRepository {
     return prisma.theme.delete({
       where: { id },
     });
+  }
+  async findById(id: string): Promise<Theme | null> {
+    return prisma.theme.findUnique({ where: { id } });
   }
 }

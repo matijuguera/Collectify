@@ -14,7 +14,7 @@ export async function GET(
   }
   return NextResponse.json(theme);
 }
-///TEST
+
 export async function PUT(
   request: Request,
   { params }: { params: { id: string } }
@@ -23,6 +23,10 @@ export async function PUT(
   const formData = await request.formData();
   const name = formData.get("name") as string;
   const photo = formData.get("photo") as File;
+
+  if (!name || !photo) {
+    return NextResponse.json({ error: "ERROR" }, { status: 400 });
+  }
 
   const arrayBuffer = await photo.arrayBuffer();
   const uint8ArrayPhoto = new Uint8Array(arrayBuffer);
@@ -39,7 +43,6 @@ export async function PUT(
     );
   }
 }
-/// END TEST
 
 export async function DELETE(
   request: Request,
@@ -49,12 +52,18 @@ export async function DELETE(
   const themeService = new ThemeService(new PrismaThemeRepository());
 
   try {
-    const theme = await themeService.delete(id);
-    return NextResponse.json(theme);
-  } catch (error) {
+    const existingTheme = await themeService.get(id);
+    if (!existingTheme) {
+      return NextResponse.json({}, { status: 404 });
+    }
+
+    await themeService.delete(id);
+    return NextResponse.json({}, { status: 204 });
+  } catch (error) { 
+    console.error("Error",error);
     return NextResponse.json(
       { error: (error as Error).message },
       { status: 400 }
     );
   }
-}
+} 
