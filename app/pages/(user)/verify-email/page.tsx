@@ -32,7 +32,7 @@ export default function Page() {
     }
 
     doVerifyEmail();
-  }, [token]);
+  }, [token, toast]);
 
   if (isLoading) {
     return (

@@ -1,4 +1,5 @@
 import prisma from "@/prismadb";
+import { UserType } from "@prisma/client";
 import bcrypt from "bcrypt";
 import type { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -58,6 +59,7 @@ export const authOptions: AuthOptions = {
           id: user.id,
           email: user.email,
           name: user.name,
+          type: user.type,
         };
       },
     }),
@@ -98,6 +100,7 @@ export const authOptions: AuthOptions = {
       if (user) {
         token.id = user.id;
         token.email = user.email;
+        token.type = user.type;
       }
       return token;
     },
@@ -106,6 +109,7 @@ export const authOptions: AuthOptions = {
         // @ts-expect-error ignore id error
         session.user.id = token.id;
         session.user.email = token.email;
+        session.user.type = token.type as UserType;
       }
       return session;
     },

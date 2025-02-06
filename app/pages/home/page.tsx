@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/app/components/ui/button";
+import Topbar from "@/app/components/ui/topbar";
 import { signOut, useSession } from "next-auth/react";
 
 export default function Page() {
@@ -20,6 +21,7 @@ export default function Page() {
 
   return (
     <div>
+      <Topbar />
       <h1>Welcome, {session?.user?.email}</h1>
       <p>Home</p>
       <Button className="w-full" onClick={onSignOut}>

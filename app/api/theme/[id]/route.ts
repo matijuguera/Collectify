@@ -4,9 +4,9 @@ import ThemeService from "../../services/ThemeService";
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } = await params;
   const themeService = new ThemeService(new PrismaThemeRepository());
   const theme = await themeService.get(id);
   if (!theme) {
@@ -17,9 +17,9 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } = await params;
   const formData = await request.formData();
   const name = formData.get("name") as string;
   const photo = formData.get("photo") as File;
@@ -46,9 +46,9 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } = await params;
   const themeService = new ThemeService(new PrismaThemeRepository());
 
   try {
@@ -59,11 +59,11 @@ export async function DELETE(
 
     await themeService.delete(id);
     return NextResponse.json({}, { status: 204 });
-  } catch (error) { 
-    console.error("Error",error);
+  } catch (error) {
+    console.error("Error", error);
     return NextResponse.json(
       { error: (error as Error).message },
       { status: 404 }
     );
   }
-} 
+}
