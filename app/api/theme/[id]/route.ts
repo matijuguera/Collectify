@@ -17,7 +17,7 @@ export async function GET(
   return NextResponse.json(theme);
 } catch (error) {
   return NextResponse.json(
-    { error: "Error getting theme: " + (error as Error).message },
+    { error: `Error getting theme: ${(error as Error).message}` },
     { status: 500 }
   );
 }}
@@ -46,7 +46,7 @@ export async function PUT(
     return NextResponse.json(theme);
   } catch (error) {
     return NextResponse.json(
-      { error: "Error updating theme: " + (error as Error).message },
+      { error: `Error updating theme: ${(error as Error).message}` },
       { status: 500 }
     );
   }
@@ -70,7 +70,7 @@ export async function DELETE(
     return NextResponse.json({}, { status: 204 });
   } catch (error) { 
     return NextResponse.json(
-      { error: "Error deleting theme: " + (error as Error).message },
+      { error: `Error deleting theme: ${(error as Error).message}` },
       { status: 404 }
     );
   }

@@ -19,7 +19,7 @@ export async function GET(
         return NextResponse.json(set);
     } catch (error) {
         return NextResponse.json(
-            { error: "Error getting set: " + (error as Error).message },
+            { error: `Error getting set: ${(error as Error).message}` },
             { status: 500 }
         );
     }
@@ -55,7 +55,7 @@ export async function PUT(
     return NextResponse.json(updatedSet);
     } catch (error) {
         return NextResponse.json(
-        { error: "Error updating set: " + (error as Error).message },
+            { error: `Error updating set: ${(error as Error).message}` },
         { status: 500 }
     );
     }
@@ -77,9 +77,8 @@ export async function DELETE(
 
     return new NextResponse(null, { status: 204 });
     } catch (error) {
-    console.error("Error deleting set ", error);
     return NextResponse.json(
-        { error: "Error deleting set " + (error as Error).message },
+        { error: `Error deleting set: ${(error as Error).message}` },
         { status: 500 }
     );
     }
