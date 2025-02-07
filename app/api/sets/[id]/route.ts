@@ -1,0 +1,90 @@
+import { NextResponse } from 'next/server';
+import { SetRepository } from '../../repositories/Sets';
+import { SetService } from '../../services/SetsService';
+
+const setService = new SetService(new SetRepository());
+
+export async function GET(
+    request: Request,
+    { id }: { id: string }
+) {
+    try {
+        const set = await setService.getSet(id);
+
+        if (!set) {
+            return NextResponse.json({ error: "Set not found" }, { status: 404 });
+        }
+
+        return NextResponse.json(set);
+    } catch {
+        return NextResponse.json({ error: "Internal server error" }, { status: 404 });
+    }
+}
+
+export async function PUT(
+    request: Request,
+    { params }:  { params: { id: string } }
+) {
+    const { id } = params;
+
+    try {
+    const existingSet = await setService.getSet(id);
+    if (!existingSet) {
+        return NextResponse.json({ error: "Set not found" }, { status: 404 });
+    }
+
+    const formData = await request.formData();
+    const name = formData.get("name") as string;
+    const photo = formData.get("photo") as File;
+
+    if (!name) {
+        return NextResponse.json(
+        { error: " " },
+        { status: 404 }
+        );
+    }
+
+    if (photo && photo.size === 0) {
+        return NextResponse.json(
+        { error: " " },
+        { status: 404 }
+        );
+    }
+
+    const arrayBuffer = await photo.arrayBuffer();
+    const uint8ArrayPhoto = new Uint8Array(arrayBuffer);
+
+    const updatedSet = await setService.updateSet(id, name, uint8ArrayPhoto);
+    return NextResponse.json(updatedSet);
+    } catch (error) {
+    console.error("Error updating set:", error);
+    return NextResponse.json(
+        { error: "Error updating set: " + (error as Error).message },
+        { status: 404 }
+    );
+    }
+}
+
+export async function DELETE(
+    request: Request,
+    { params }: { params: { id: string } }
+) {
+    const { id } = params;
+
+    try {
+    const existingSet = await setService.getSet(id);
+    if (!existingSet) {
+        return NextResponse.json({ error: " " }, { status: 404 });
+    }
+
+    await setService.deleteSet(id);
+
+    return new NextResponse(null, { status: 204 });
+    } catch (error) {
+    console.error(" ", error);
+    return NextResponse.json(
+        { error: "  " + (error as Error).message },
+        { status: 404 }
+    );
+    }
+}

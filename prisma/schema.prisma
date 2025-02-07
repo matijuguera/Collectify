@@ -34,6 +34,15 @@ model Theme {
   id    String @id @default(uuid())
   name  String
   photo Bytes
+  sets  Set[]
+}
+
+model Set {
+  id       String @id @default(uuid())
+  name     String
+  photo    Bytes
+  theme_id String
+  theme    Theme  @relation(fields: [theme_id], references: [id])
 }
 
 enum UserType {
