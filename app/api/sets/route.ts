@@ -7,11 +7,10 @@ const setService = new SetService(new SetRepository());
 export async function GET() {
     try {
         const sets = await setService.listSets();
-        return NextResponse.json(sets);
+        return NextResponse.json(sets, { status: 200 });	
     } catch {
         return NextResponse.json
-        ({ error:  " "}, { status: 404 });
-
+        ({ error:  " Error getting set "}, { status: 500 });
         ;
     }
 }
@@ -26,14 +25,14 @@ try {
 
     if (!name || !theme_id) {
     return NextResponse.json(
-        { error: " " },
-        { status: 404 }
+        { error: "Name and theme are required fields " },
+        { status: 400 }
     );
     }
 
-    if (!photo || photo.size === 0) {
+    if (!photo || !photo.size ) {
     return NextResponse.json(
-        { error: " " },
+        { error: " photo is required " },
         { status: 404 }
     )}
 
@@ -43,10 +42,10 @@ try {
     const set = await setService.createSet(name, photoBuffer, theme_id);
     return NextResponse.json(set, { status: 201 });
 } catch (error) {
-    console.error(" ", error);
+    console.error(" error creating set ", error);
     return NextResponse.json(
-    { error: " " + (error as Error).message },
-    { status: 404 }
+    { error: " unexpected error " + (error as Error).message },
+    { status: 500 }
     );
 }
 }

@@ -4,33 +4,37 @@ import { SetService } from '../../services/SetsService';
 
 const setService = new SetService(new SetRepository());
 
-export async function GET(
+export async function GET( 
     request: Request,
-    { id }: { id: string }
+    { params }:  { params: Promise<{ id: string }> }
 ) {
+    const { id } = await params;
+
     try {
         const set = await setService.getSet(id);
-
         if (!set) {
-            return NextResponse.json({ error: "Set not found" }, { status: 404 });
+            return NextResponse.json({}, { status: 404 });
         }
 
         return NextResponse.json(set);
-    } catch {
-        return NextResponse.json({ error: "Internal server error" }, { status: 404 });
+    } catch (error) {
+        return NextResponse.json(
+            { error: "Error getting set: " + (error as Error).message },
+            { status: 500 }
+        );
     }
 }
 
 export async function PUT(
     request: Request,
-    { params }:  { params: { id: string } }
+    { params }:  { params: Promise<{ id: string }> }
 ) {
-    const { id } = params;
+    const { id } = await params;
 
     try {
     const existingSet = await setService.getSet(id);
     if (!existingSet) {
-        return NextResponse.json({ error: "Set not found" }, { status: 404 });
+        return NextResponse.json({}, { status: 404 });
     }
 
     const formData = await request.formData();
@@ -39,15 +43,8 @@ export async function PUT(
 
     if (!name) {
         return NextResponse.json(
-        { error: " " },
-        { status: 404 }
-        );
-    }
-
-    if (photo && photo.size === 0) {
-        return NextResponse.json(
-        { error: " " },
-        { status: 404 }
+        { error: "Name is required" },
+        { status: 400 }
         );
     }
 
@@ -57,34 +54,33 @@ export async function PUT(
     const updatedSet = await setService.updateSet(id, name, uint8ArrayPhoto);
     return NextResponse.json(updatedSet);
     } catch (error) {
-    console.error("Error updating set:", error);
-    return NextResponse.json(
+        return NextResponse.json(
         { error: "Error updating set: " + (error as Error).message },
-        { status: 404 }
+        { status: 500 }
     );
     }
 }
 
 export async function DELETE(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }:  { params: Promise<{ id: string }> }
 ) {
-    const { id } = params;
+    const { id } = await params;
 
     try {
     const existingSet = await setService.getSet(id);
     if (!existingSet) {
-        return NextResponse.json({ error: " " }, { status: 404 });
+        return NextResponse.json({ error: "Set not found" }, { status: 404 });
     }
 
     await setService.deleteSet(id);
 
     return new NextResponse(null, { status: 204 });
     } catch (error) {
-    console.error(" ", error);
+    console.error("Error deleting set ", error);
     return NextResponse.json(
-        { error: "  " + (error as Error).message },
-        { status: 404 }
+        { error: "Error deleting set " + (error as Error).message },
+        { status: 500 }
     );
     }
 }
