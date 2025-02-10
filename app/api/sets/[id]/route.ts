@@ -38,20 +38,24 @@ export async function PUT(
     }
 
     const formData = await request.formData();
-    const name = formData.get("name") as string;
-    const photo = formData.get("photo") as File;
+    const name = formData.get("name") as string | null;
+    const photo = formData.get("photo") as File | null;
 
-    if (!name) {
-        return NextResponse.json(
-        { error: "Name is required" },
-        { status: 400 }
-        );
+    let updatedName = existingSet.name;
+    let updatedPhoto: Uint8Array = existingSet.photo ?? new Uint8Array();
+
+    if (name !== null){
+        updatedName = name;
     }
 
-    const arrayBuffer = await photo.arrayBuffer();
-    const uint8ArrayPhoto = new Uint8Array(arrayBuffer);
+    if (photo && photo.size === 0) {
+        updatedPhoto = new Uint8Array(); 
+    } else if (photo) {
+        const arrayBuffer = await photo.arrayBuffer();
+        updatedPhoto = new Uint8Array(arrayBuffer);
+    }
 
-    const updatedSet = await setService.updateSet(id, name, uint8ArrayPhoto);
+    const updatedSet = await setService.updateSet(id, updatedName, updatedPhoto);
     return NextResponse.json(updatedSet);
     } catch (error) {
         return NextResponse.json(
