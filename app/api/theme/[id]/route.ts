@@ -25,30 +25,45 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }:  { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } } 
 ) {
-  const { id } =  await params;
-  const formData = await request.formData();
-  const name = formData.get("name") as string;
-  const photo = formData.get("photo") as File;
-
-  if (!name && !photo) {
-    return NextResponse.json({ error: "Name or photo is required" }, { status: 400 });
-  }
-
-  const arrayBuffer = await photo.arrayBuffer();
-  const uint8ArrayPhoto = new Uint8Array(arrayBuffer);
-
-  const themeService = new ThemeService(new PrismaThemeRepository());
+  const { id } = params; 
 
   try {
-    const theme = await themeService.update(id, name, uint8ArrayPhoto);
-    return NextResponse.json(theme);
+      const formData = await request.formData();
+      const name = formData.get("name") as string | null;
+      const photo = formData.get("photo") as File | null;
+      const themeService = new ThemeService(new PrismaThemeRepository());
+
+      const existingTheme = await themeService.get(id);
+      if (!existingTheme) {
+          return NextResponse.json({ error: "Theme not found" }, { status: 404 });
+      }
+
+      let updatedName = existingTheme.name;
+      let updatedPhoto: Uint8Array | null = existingTheme.photo?? null; 
+
+      if (name!= null) { 
+          updatedName = name; 
+      }
+
+      if (photo!= null) { 
+          if (photo.size === 0) {
+              updatedPhoto = new Uint8Array();
+          } else {
+              const arrayBuffer = await photo.arrayBuffer();
+              updatedPhoto = new Uint8Array(arrayBuffer);
+          }
+      }
+
+      const updatedTheme = await themeService.update(id, updatedName, updatedPhoto);
+      return NextResponse.json(updatedTheme);
   } catch (error) {
-    return NextResponse.json(
-      { error: `Error updating theme: ${(error as Error).message}` },
-      { status: 500 }
-    );
+      console.error("Error updating theme:", error);
+      return NextResponse.json(
+          { error: "Error updating theme: " + (error as Error).message },
+          { status: 500 }
+      );
   }
 }
 
