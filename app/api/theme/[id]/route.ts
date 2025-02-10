@@ -4,28 +4,36 @@ import ThemeService from "../../services/ThemeService";
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }:  { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } = await params;
   const themeService = new ThemeService(new PrismaThemeRepository());
+
+  try {
   const theme = await themeService.get(id);
   if (!theme) {
     return NextResponse.json({}, { status: 404 });
   }
   return NextResponse.json(theme);
-}
+} catch (error) {
+  return NextResponse.json(
+    { error: `Error getting theme: ${(error as Error).message}` },
+    { status: 500 }
+  );
+}}
+
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }:  { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } =  await params;
   const formData = await request.formData();
   const name = formData.get("name") as string;
   const photo = formData.get("photo") as File;
 
   if (!name && !photo) {
-    return NextResponse.json({ error: "ERROR" }, { status: 404 });
+    return NextResponse.json({ error: "Name or photo is required" }, { status: 400 });
   }
 
   const arrayBuffer = await photo.arrayBuffer();
@@ -38,17 +46,17 @@ export async function PUT(
     return NextResponse.json(theme);
   } catch (error) {
     return NextResponse.json(
-      { error: (error as Error).message },
-      { status: 404 }
+      { error: `Error updating theme: ${(error as Error).message}` },
+      { status: 500 }
     );
   }
 }
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }:  { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } = await params;
   const themeService = new ThemeService(new PrismaThemeRepository());
 
   try {
@@ -58,11 +66,11 @@ export async function DELETE(
     }
 
     await themeService.delete(id);
+    
     return NextResponse.json({}, { status: 204 });
   } catch (error) { 
-    console.error("Error",error);
     return NextResponse.json(
-      { error: (error as Error).message },
+      { error: `Error deleting theme: ${(error as Error).message}` },
       { status: 404 }
     );
   }
