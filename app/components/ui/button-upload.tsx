@@ -1,14 +1,13 @@
 import { CirclePlus } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { Button } from "./button";
 
 type ButtonUploadProps = { className?: string };
 
 export default function ButtonUpload({ className }: ButtonUploadProps) {
-  const router = useRouter();
+  // const router = useRouter();
 
   function onClick() {
-    router.push("/pages/upload");
+    // router.push("/pages/upload");
   }
 
   return (

@@ -26,7 +26,9 @@ export async function POST(request: Request) {
 export async function GET() {
   const themeService = new ThemeService(new PrismaThemeRepository());
   const themes = await themeService.list();
-  return NextResponse.json(themes);
+  const themesWithBase64 = themes.map((theme) => ({
+    ...theme,
+    photoBase64: Buffer.from(theme.photo).toString("base64"),
+  }));
+  return NextResponse.json(themesWithBase64);
 }
-
-
