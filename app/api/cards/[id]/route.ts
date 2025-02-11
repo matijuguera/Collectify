@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { SetRepository } from "../../repositories/Sets";
-import { SetService } from "../../services/SetsService";
+import { CardRepository } from "../../repositories/Cards";
+import { CardService } from "../../services/CardsService";
 
-const setService = new SetService(new SetRepository());
+const cardService = new CardService(new CardRepository());
 
 export async function GET(
   request: Request,
@@ -11,15 +11,14 @@ export async function GET(
   const { id } = await params;
 
   try {
-    const set = await setService.getSet(id);
-    if (!set) {
-      return NextResponse.json({}, { status: 404 });
+    const card = await cardService.getCard(id);
+    if (!card) {
+      return NextResponse.json({ error: "Card not found" }, { status: 404 });
     }
-
-    return NextResponse.json(set);
+    return NextResponse.json(card);
   } catch (error) {
     return NextResponse.json(
-      { error: `Error getting set: ${(error as Error).message}` },
+      { error: "Error fetching card: " + (error as Error).message },
       { status: 500 }
     );
   }
@@ -32,17 +31,23 @@ export async function PUT(
   const { id } = await params;
 
   try {
-    const existingSet = await setService.getSet(id);
-    if (!existingSet) {
-      return NextResponse.json({}, { status: 404 });
-    }
-
     const formData = await request.formData();
+    const identifier = formData.get("identifier") as string | null;
     const name = formData.get("name") as string | null;
     const photo = formData.get("photo") as File | null;
 
-    let updatedName = existingSet.name;
-    let updatedPhoto: Uint8Array = existingSet.photo ?? new Uint8Array();
+    const existingCard = await cardService.getCard(id);
+    if (!existingCard) {
+      return NextResponse.json({ error: "Card not found" }, { status: 404 });
+    }
+
+    let updatedIdentifier = existingCard.identifier;
+    let updatedName = existingCard.name;
+    let updatedPhoto: Uint8Array | null = existingCard.photo;
+
+    if (identifier !== null) {
+      updatedIdentifier = identifier || "";
+    }
 
     if (name !== null) {
       updatedName = name || "";
@@ -57,15 +62,16 @@ export async function PUT(
       }
     }
 
-    const updatedSet = await setService.updateSet(
+    const updatedCard = await cardService.updateCard(
       id,
+      updatedIdentifier,
       updatedName,
       updatedPhoto
     );
-    return NextResponse.json(updatedSet);
+    return NextResponse.json(updatedCard);
   } catch (error) {
     return NextResponse.json(
-      { error: `Error updating set: ${(error as Error).message}` },
+      { error: "Error updating card: " + (error as Error).message },
       { status: 500 }
     );
   }
@@ -78,17 +84,11 @@ export async function DELETE(
   const { id } = await params;
 
   try {
-    const existingSet = await setService.getSet(id);
-    if (!existingSet) {
-      return NextResponse.json({ error: "Set not found" }, { status: 404 });
-    }
-
-    await setService.deleteSet(id);
-
+    await cardService.deleteCard(id);
     return new NextResponse(null, { status: 204 });
   } catch (error) {
     return NextResponse.json(
-      { error: `Error deleting set: ${(error as Error).message}` },
+      { error: "Error deleting card: " + (error as Error).message },
       { status: 500 }
     );
   }
