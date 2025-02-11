@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { PhotoManager } from "../../lib/photo-manager";
 import { PrismaThemeRepository } from "../../repositories/Theme";
 import ThemeService from "../../services/ThemeService";
 
@@ -12,7 +13,7 @@ export async function GET(
   if (!theme) {
     return NextResponse.json({}, { status: 404 });
   }
-  return NextResponse.json(theme);
+  return NextResponse.json(PhotoManager.addPhotoBase64ToObject(theme, "photo"));
 }
 
 export async function PUT(

@@ -1,6 +1,8 @@
+import { ThemeWithPhoto } from "@/prisma/custom-models";
+
 export const themesApi = "/api/themes";
 
-export async function getThemes() {
+export async function getThemes(): Promise<ThemeWithPhoto[]> {
   const response = await fetch(themesApi, { method: "GET" });
 
   if (!response.ok) {

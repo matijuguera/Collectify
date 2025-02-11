@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { PhotoManager } from "../lib/photo-manager";
 import { PrismaThemeRepository } from "../repositories/Theme";
 import ThemeService from "../services/ThemeService";
 
@@ -26,9 +27,7 @@ export async function POST(request: Request) {
 export async function GET() {
   const themeService = new ThemeService(new PrismaThemeRepository());
   const themes = await themeService.list();
-  const themesWithBase64 = themes.map((theme) => ({
-    ...theme,
-    photoBase64: Buffer.from(theme.photo).toString("base64"),
-  }));
-  return NextResponse.json(themesWithBase64);
+  return NextResponse.json(
+    PhotoManager.addPhotoBase64ToObjects(themes, "photo")
+  );
 }
