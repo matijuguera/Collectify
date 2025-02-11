@@ -25,7 +25,7 @@ export default class ThemeService {
   async update(id: string, name: string, photo: Uint8Array<ArrayBufferLike>) {
     return this.themeRepository.update(id, name, photo);
   }
-  async delete(id: string) {  
+  async delete(id: string) {
     return this.themeRepository.delete(id);
   }
 }
