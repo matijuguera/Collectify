@@ -17,6 +17,7 @@ model User {
   updatedAt      DateTime            @updatedAt
   termsAccepted  Boolean             @default(false)
   type           UserType            @default(USER)
+  cards          UserCard[]
   tokens         VerificationToken[]
 }
 
@@ -43,6 +44,26 @@ model Set {
   photo    Bytes
   theme_id String
   theme    Theme  @relation(fields: [theme_id], references: [id])
+  Card     Card[]
+}
+
+model Card {
+  id         String     @id @default(uuid())
+  identifier String
+  name       String
+  photo      Bytes
+  set_id     String
+  set        Set        @relation(fields: [set_id], references: [id])
+  users      UserCard[]
+}
+
+model UserCard {
+  user_id String
+  card_id String
+  user    User   @relation(fields: [user_id], references: [id])
+  card    Card   @relation(fields: [card_id], references: [id])
+
+  @@id([user_id, card_id])
 }
 
 enum UserType {
