@@ -4,10 +4,10 @@ import { Button } from "./button";
 type ButtonUploadProps = { className?: string };
 
 export default function ButtonUpload({ className }: ButtonUploadProps) {
-  // const router = useRouter();
+  // TODO: const router = useRouter();
 
   function onClick() {
-    // router.push("/pages/upload");
+    // TODO: router.push("/pages/upload");
   }
 
   return (
