@@ -14,7 +14,7 @@ export async function sendVerificationEmail(to: string, token: string) {
     },
   });
 
-  const verifyUrl = `${process.env.NEXT_PUBLIC_APP_URL}/pages/verify-email?token=${token}`;
+  const verifyUrl = `${process.env.NEXT_PUBLIC_APP_URL}/verify-email?token=${token}`;
 
   await transporter.sendMail({
     from: '"Collectify" <no-reply@tuapp.com>',
@@ -39,7 +39,7 @@ export async function sendResetPasswordEmail(to: string, token: string) {
     },
   });
 
-  const url = `${process.env.NEXT_PUBLIC_APP_URL}/pages/reset-password?token=${token}`;
+  const url = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${token}`;
 
   await transporter.sendMail({
     from: '"Collectify" <no-reply@tuapp.com>',

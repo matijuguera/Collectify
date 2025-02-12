@@ -1,9 +1,9 @@
+import { Toaster } from "@/components/ui/toaster";
 import "animate.css";
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Suspense } from "react";
-import { Toaster } from "./components/ui/toaster";
 import "./globals.css";
 import Providers from "./providers";
 
