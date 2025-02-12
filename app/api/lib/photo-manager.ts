@@ -1,29 +1,38 @@
 export class PhotoManager {
-  // KeyToConvert is the key of the object that contains the photo
-  static addPhotoBase64ToObject(object: unknown, keyToConvert: string) {
+  private key: string;
+
+  constructor(key: string = "photo") {
+    this.key = key;
+  }
+
+  addPhotoBase64ToObject(object: unknown) {
     if (typeof object !== "object" || object === null) {
       throw new Error("Input must be an object");
     }
 
     const typedObject = object as Record<string, unknown>;
 
-    if (!typedObject[keyToConvert]) {
-      throw new Error(`Key ${keyToConvert} does not exist in object`);
+    if (!typedObject[this.key]) {
+      throw new Error(`Key ${this.key} does not exist in object`);
     }
 
-    if (!(typedObject[keyToConvert] instanceof Uint8Array)) {
-      throw new Error(`Object[${keyToConvert}] is not a Uint8Array`);
+    if (!(typedObject[this.key] instanceof Uint8Array)) {
+      throw new Error(`Object[${this.key}] is not a Uint8Array`);
     }
 
     return {
       ...typedObject,
-      photoBase64: Buffer.from(typedObject[keyToConvert]).toString("base64"),
+      photoBase64: Buffer.from(typedObject[this.key] as Uint8Array).toString(
+        "base64"
+      ),
     };
   }
 
-  static addPhotoBase64ToObjects(objects: unknown[], keyToConvert: string) {
-    return objects.map((object) =>
-      this.addPhotoBase64ToObject(object, keyToConvert)
-    );
+  addPhotoBase64ToObjects(objects: unknown[]) {
+    return objects.map((object) => this.addPhotoBase64ToObject(object));
+  }
+
+  setKey(key: string) {
+    this.key = key;
   }
 }

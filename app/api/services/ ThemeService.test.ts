@@ -1,11 +1,12 @@
 import prisma from "@/prismadb";
+import { PhotoManager } from "../lib/photo-manager";
 import { PrismaThemeRepository } from "../repositories/Theme";
 import ThemeService from "./ThemeService";
 
 describe("ThemeService.create", () => {
   const themeRepository = new PrismaThemeRepository();
 
-  const themeService = new ThemeService(themeRepository);
+  const themeService = new ThemeService(themeRepository, new PhotoManager());
 
   beforeEach(async () => {
     await prisma.theme.deleteMany({});

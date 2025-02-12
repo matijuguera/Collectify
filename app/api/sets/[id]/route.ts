@@ -1,23 +1,25 @@
 import { NextResponse } from "next/server";
-import { currentThemeService } from "../../services/ThemeService";
+import { SetRepository } from "../../repositories/Sets";
+import { SetService } from "../../services/SetsService";
+
+const setService = new SetService(new SetRepository());
 
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const themeService = currentThemeService;
 
   try {
-    const theme = await themeService.get(id);
-    if (!theme) {
+    const set = await setService.getSet(id);
+    if (!set) {
       return NextResponse.json({}, { status: 404 });
     }
 
-    return NextResponse.json(theme);
+    return NextResponse.json(set);
   } catch (error) {
     return NextResponse.json(
-      { error: `Error getting theme: ${(error as Error).message}` },
+      { error: `Error getting set: ${(error as Error).message}` },
       { status: 500 }
     );
   }
@@ -30,18 +32,17 @@ export async function PUT(
   const { id } = await params;
 
   try {
+    const existingSet = await setService.getSet(id);
+    if (!existingSet) {
+      return NextResponse.json({}, { status: 404 });
+    }
+
     const formData = await request.formData();
     const name = formData.get("name") as string | null;
     const photo = formData.get("photo") as File | null;
-    const themeService = currentThemeService;
 
-    const existingTheme = await themeService.get(id);
-    if (!existingTheme) {
-      return NextResponse.json({ error: "Theme not found" }, { status: 404 });
-    }
-
-    let updatedName = existingTheme.name;
-    let updatedPhoto: Uint8Array | null = existingTheme.photo ?? null;
+    let updatedName = existingSet.name;
+    let updatedPhoto: Uint8Array = existingSet.photo ?? new Uint8Array();
 
     if (name !== null) {
       updatedName = name || "";
@@ -56,15 +57,15 @@ export async function PUT(
       }
     }
 
-    const updatedTheme = await themeService.update(
+    const updatedSet = await setService.updateSet(
       id,
       updatedName,
       updatedPhoto
     );
-    return NextResponse.json(updatedTheme);
+    return NextResponse.json(updatedSet);
   } catch (error) {
     return NextResponse.json(
-      { error: "Error updating theme: " + (error as Error).message },
+      { error: `Error updating set: ${(error as Error).message}` },
       { status: 500 }
     );
   }
@@ -75,21 +76,20 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const themeService = currentThemeService;
 
   try {
-    const existingTheme = await themeService.get(id);
-    if (!existingTheme) {
-      return NextResponse.json({}, { status: 404 });
+    const existingSet = await setService.getSet(id);
+    if (!existingSet) {
+      return NextResponse.json({ error: "Set not found" }, { status: 404 });
     }
 
-    await themeService.delete(id);
+    await setService.deleteSet(id);
 
-    return NextResponse.json({}, { status: 204 });
+    return new NextResponse(null, { status: 204 });
   } catch (error) {
     return NextResponse.json(
-      { error: `Error deleting theme: ${(error as Error).message}` },
-      { status: 404 }
+      { error: `Error deleting set: ${(error as Error).message}` },
+      { status: 500 }
     );
   }
 }
