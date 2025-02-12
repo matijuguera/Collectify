@@ -1,6 +1,6 @@
-import { PrismaUserRepository } from "@/app/api/repositories/User";
-import { PrismaVerificationTokenRepository } from "@/app/api/repositories/VerificationToken";
-import { AuthService } from "@/app/api/services/AuthService";
+import { PrismaUserRepository } from "@/api/repositories/User";
+import { PrismaVerificationTokenRepository } from "@/api/repositories/VerificationToken";
+import { AuthService } from "@/api/services/AuthService";
 import prisma from "@/prismadb";
 import { VerificationTokenType } from "@prisma/client";
 
