@@ -1,5 +1,10 @@
+import { Suspense } from "react";
 import UpdatePasswordForm from "./ui/update-password-form";
 
 export default function Page() {
-  return <UpdatePasswordForm />;
+  return (
+    <Suspense>
+      <UpdatePasswordForm />
+    </Suspense>
+  );
 }

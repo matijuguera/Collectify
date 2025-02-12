@@ -1,19 +1,19 @@
 import { NextResponse } from "next/server";
-import { PrismaThemeRepository } from "../../repositories/Theme";
-import ThemeService from "../../services/ThemeService";
+import { currentThemeService } from "../../services/ThemeService";
 
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const themeService = new ThemeService(new PrismaThemeRepository());
+  const themeService = currentThemeService;
 
   try {
     const theme = await themeService.get(id);
     if (!theme) {
       return NextResponse.json({}, { status: 404 });
     }
+
     return NextResponse.json(theme);
   } catch (error) {
     return NextResponse.json(
@@ -33,7 +33,7 @@ export async function PUT(
     const formData = await request.formData();
     const name = formData.get("name") as string | null;
     const photo = formData.get("photo") as File | null;
-    const themeService = new ThemeService(new PrismaThemeRepository());
+    const themeService = currentThemeService;
 
     const existingTheme = await themeService.get(id);
     if (!existingTheme) {
@@ -75,7 +75,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const themeService = new ThemeService(new PrismaThemeRepository());
+  const themeService = currentThemeService;
 
   try {
     const existingTheme = await themeService.get(id);

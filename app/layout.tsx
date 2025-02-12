@@ -2,6 +2,7 @@ import "animate.css";
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Suspense } from "react";
 import { Toaster } from "./components/ui/toaster";
 import "./globals.css";
 import Providers from "./providers";
@@ -38,7 +39,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Providers>
-            <div className="p-4 h-screen">{children}</div>
+            <Suspense>
+              <div className="p-4 h-screen">{children}</div>
+            </Suspense>
             <Toaster />
           </Providers>
         </ThemeProvider>

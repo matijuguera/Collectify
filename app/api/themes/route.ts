@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
+import { PhotoManager } from "../lib/photo-manager";
 import { PrismaThemeRepository } from "../repositories/Theme";
-import ThemeService from "../services/ThemeService";
+import ThemeService, { currentThemeService } from "../services/ThemeService";
 
 export async function POST(request: Request) {
   const formData = await request.formData();
@@ -10,7 +11,10 @@ export async function POST(request: Request) {
   const arrayBuffer = await photo.arrayBuffer();
   const uint8ArrayPhoto = new Uint8Array(arrayBuffer);
 
-  const themeService = new ThemeService(new PrismaThemeRepository());
+  const themeService = new ThemeService(
+    new PrismaThemeRepository(),
+    new PhotoManager()
+  );
 
   try {
     const theme = await themeService.create(name, uint8ArrayPhoto);
@@ -24,9 +28,7 @@ export async function POST(request: Request) {
 }
 
 export async function GET() {
-  const themeService = new ThemeService(new PrismaThemeRepository());
+  const themeService = currentThemeService;
   const themes = await themeService.list();
   return NextResponse.json(themes);
 }
-
-

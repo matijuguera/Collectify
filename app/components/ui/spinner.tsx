@@ -18,3 +18,11 @@ export const Spinner = ({ className }: React.SVGProps<SVGSVGElement>) => {
     </svg>
   );
 };
+
+export const FullScreenSpinner = () => {
+  return (
+    <div className="flex justify-center items-center h-screen">
+      <Spinner />
+    </div>
+  );
+};

@@ -1,5 +1,5 @@
 import { VerificationTokenType } from "@prisma/client";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { PasswordManager } from "../lib/password-manager";
 import { IUserRepository } from "../repositories/User";
 import { IVerificationTokenRepository } from "../repositories/VerificationToken";
