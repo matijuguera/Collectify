@@ -1,5 +1,5 @@
 import { PrismaClient, UserType } from "@prisma/client";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
@@ -19,6 +19,7 @@ async function seedUsers() {
       name: "Alice",
       hashedPassword: defaultPassword,
       termsAccepted: true,
+      emailVerified: new Date(),
       type: UserType.ADMIN,
     },
   });

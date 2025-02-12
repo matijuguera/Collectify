@@ -44,7 +44,7 @@ const Logo: React.FC<LogoProps> = ({
         className={clsx(className, "text-primary")}
         height={convertedSize.height}
         width={convertedSize.width}
-        viewBox="0 0 43 61"
+        viewBox="0 0 55 70"
         {...props}
       >
         <path

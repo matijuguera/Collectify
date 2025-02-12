@@ -1,6 +1,6 @@
 import prisma from "@/prismadb";
 import { VerificationTokenType } from "@prisma/client";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 import { sendVerificationEmail } from "../lib/mailer";
 import { PasswordManager } from "../lib/password-manager";

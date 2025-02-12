@@ -27,6 +27,38 @@ Installing vercel
 - `pnpm i -g vercel`
 - Check version: `vercel --version`
 
+## Github
+
+PRs:
+
+1. We should avoid working directly on main
+
+2. We should create a new branch for each new feature
+
+   - `git checkout -b <branch-name>`
+
+3. We should push the branch to the remote repository
+
+   - `git push origin <branch-name>`
+   - `git commit -m"commit message"` Work with many commits as possible before pushing, naming the commits with a short description of the changes
+
+4. We should create a PR
+
+   - `https://github.com/collectify-app/collectify-app/pulls`
+
+5. We should merge the PR
+
+   - Wait for approval
+   - Merge the PR
+   - Delete the branch
+
+6. We should update the main branch
+
+   - `git checkout main`
+   - `git pull origin main`
+
+7. Repeat from step 2
+
 # Architecture
 
 /App -> root project
